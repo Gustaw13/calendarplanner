@@ -1,18 +1,19 @@
 import json
-import bcrypt
-from flask import app, request
-from flask_login import current_user, login_user
+from flask import app, request, session
+import flask
+from flask_cors import cross_origin
+from flask_login import current_user, login_required, login_user
 from models import User
-from app import login_manager, db, app
+from app import login_manager, db, app, bcrypt
 
 
 @login_manager.user_loader
-def load_user(user_id):
-    print(user_id)
-    return User.query.get(int(user_id))
+def load_user(id):
+    return User.query.get(int(id))
 
 
 @app.route("/sign-up", methods=["POST"])
+@cross_origin(supports_credentials=True)
 def sign_up():
     request_body = json.loads(request.data)
 
@@ -29,10 +30,14 @@ def sign_up():
     db.session.add(user)
     db.session.commit()
 
-    return json.dumps({"response": "success"})
+    response = flask.jsonify({"response": "success"})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    return response
 
 
 @app.route("/login", methods=["POST"])
+@cross_origin(supports_credentials=True)
 def login():
 
     request_body = json.loads(request.data)
@@ -40,12 +45,15 @@ def login():
     user = User.query.filter_by(email=request_body.get("email")).first()
     if user and bcrypt.check_password_hash(user.password, request_body.get("password")):
         login_user(user, remember=True, force=True)
+        session["userId"] = user.id
         print("test")
+        print(current_user.is_authenticated)
         return json.dumps({"response": "success"})
+    print(user)
     return json.dumps({"response": "error"})
 
 
 @app.route("/get-current-user", methods=["GET"])
+@cross_origin(supports_credentials=True)
 def get_current_user():
-    # if current_user and current_user.is_authenticated:
     return json.dumps({"username": current_user.is_authenticated})
