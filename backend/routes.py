@@ -2,8 +2,8 @@ import json
 from flask import app, request, session
 import flask
 from flask_cors import cross_origin
-from flask_login import current_user, login_required, login_user
-from models import User
+from flask_login import current_user, login_required, login_user, logout_user
+from models import User, Event
 from app import login_manager, db, app, bcrypt
 
 
@@ -29,11 +29,7 @@ def sign_up():
     )
     db.session.add(user)
     db.session.commit()
-
-    response = flask.jsonify({"response": "success"})
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
-    return response
+    return json.dumps({"response": "success"})
 
 
 @app.route("/login", methods=["POST"])
@@ -53,7 +49,30 @@ def login():
     return json.dumps({"response": "error"})
 
 
+@app.route("/logout")
+@cross_origin(supports_credentials=True)
+def logout():
+    logout_user()
+    return json.dumps({"username": current_user.is_authenticated})
+
+
 @app.route("/get-current-user", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def get_current_user():
-    return json.dumps({"username": current_user.is_authenticated})
+    return json.dumps({"username": current_user.email})
+
+
+@app.route("/add-event", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def add_event():
+    request_body = json.loads(request.data)
+
+    event = Event(
+        trainee=request_body.get("trainee"),
+        comment=request_body.get("comment"),
+        event_date=request_body.get("eventDate"),
+        # trainee_id=request_body.get("traineeId"),
+    )
+    db.session.add(event)
+    db.session.commit()
+    return json.dumps({"response": "success"})

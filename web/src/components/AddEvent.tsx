@@ -6,8 +6,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import SuccessConfirm from "./SuccessConfirm";
-import { Stack, TextField } from "@mui/material";
+import { Box, Stack, TextField } from "@mui/material";
 import ChooseTime from "./ChooseTime";
+import SelectTrainee from "./SelectTrainee";
 
 export default function AddEvent({ open, setOpen }) {
   const handleClickOpen = () => {
@@ -18,36 +19,68 @@ export default function AddEvent({ open, setOpen }) {
     setOpen(false);
   };
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      trainee: data.get("trainee"),
+      comment: data.get("comment"),
+    });
+
+    await fetch("http://localhost:8000/add-event", {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        trainee: data.get("trainee"),
+        traineeId: data.get("traineeId"),
+        comment: data.get("comment"),
+        eventDate: data.get("eventDate"),
+      }),
+    }).then(async (response) => {
+      await response.json().then((data) => {
+        console.log(data);
+      });
+    });
+  };
+
   return (
     <React.Fragment>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        /* aria-describedby="alert-dialog-description" */
-      >
-        <DialogTitle id="alert-dialog-title">{"Create event"}</DialogTitle>
-        {
-          <DialogContent>
-            {/* <DialogContentText id="alert-dialog-description">
-            Your training will be confirmed.
-          </DialogContentText> */}
-            <Stack sx={{ gap: "1.5rem" }}>
-              <TextField
-                id="outlined-basic"
-                label="Name an event"
-                variant="outlined"
-              />
-              <ChooseTime />
-            </Stack>
-          </DialogContent>
-        }
-        <DialogActions>
-          <Button color="success" onClick={handleClose}>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Box component="form" noValidate onSubmit={handleSubmit}>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          /* aria-describedby="alert-dialog-description" */
+        >
+          <DialogTitle id="alert-dialog-title">{"Create event"}</DialogTitle>
+          {
+            <DialogContent>
+              {/* <DialogContentText id="alert-dialog-description">
+              Your training will be confirmed.
+            </DialogContentText> */}
+              <Stack sx={{ gap: "1.5rem" }}>
+                <SelectTrainee />
+                <TextField
+                  id="comment"
+                  name="comment"
+                  label="Add comment"
+                  variant="outlined"
+                />
+                <ChooseTime />
+              </Stack>
+            </DialogContent>
+          }
+          <DialogActions>
+            <Button type="submit" color="success">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </React.Fragment>
   );
 }

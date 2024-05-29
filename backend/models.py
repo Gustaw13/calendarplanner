@@ -17,10 +17,12 @@ class User(UserMixin, db.Model):
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50), nullable=False)
+    trainee = db.Column(db.String(50), nullable=False)
+    comment = db.Column(db.String(100))
     event_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    trainee_id = db.Column(db.Integer, db.ForeignKey("trainee.id"), nullable=False)
 
     def __repr__(self):
         return f"Event('{self.title}', '{self.event_date}')"

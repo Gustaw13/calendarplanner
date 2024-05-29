@@ -18,6 +18,8 @@ export default function NavBar() {
       sx={{
         position: "sticky",
         top: 0,
+        zIndex: 1,
+        overflow: "hidden",
         backgroundColor: "#1f1f1f",
         /* "linear-gradient(185deg, rgba(237,232,245,1) 35%, rgba(173,187,218,1) 100%)", */
         minHeight: "5rem",

@@ -73,7 +73,7 @@ export default function BookSession() {
   const [currentlySelectedDay, setCurrentlySelectedDay] = useState();
 
   const handleCellClick = (event, row, day) => {
-    // Otwieranie okienka z wyborem daty i godziny + nazwa wydarzenia
+    // Otwieranie okienka z wyborem godziny + nazwa wydarzenia
     console.log(day);
     setCurrentlySelectedDay(day);
     setCreateWindowOpen(true);

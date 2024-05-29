@@ -24,10 +24,10 @@ function App() {
       <Stack className="App">
         <Box
           sx={{
-            backgroundColor: "#fffef1" /* "#EDE8F5", */,
+            backgroundColor: "#fffef1",
             display: "flex",
             flexDirection: "column",
-            height: "100%",
+            height: "5000%",
             width: "100%",
           }}
         >

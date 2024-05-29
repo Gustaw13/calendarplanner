@@ -15,8 +15,65 @@ export default function CardPlan() {
   return (
     <Stack
       direction={"row"}
-      sx={{ justifyContent: "center", flexWrap: "wrap", width: "70%" }}
+      sx={{
+        justifyContent: "center",
+        flexWrap: "wrap",
+        width: "70%",
+        display: "flex",
+      }}
     >
+      <Stack sx={{ padding: "2rem", width: "300px" }}>
+        <Card>
+          <CardContent>
+            <Typography gutterBottom variant="h5">
+              13 May 17:30
+            </Typography>
+            <Typography gutterBottom>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam
+              provident fuga corporis nostrum sint expedita illum veritatis aut
+              quasi eveniet! Recusandae incidunt totam error amet vero ullam est
+              ducimus dolores!
+            </Typography>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                justifyContent: "center",
+              }}
+            >
+              <ConfirmAlert />
+              <CancelAlert />
+            </Stack>
+          </CardContent>
+        </Card>
+      </Stack>
+
+      <Stack sx={{ padding: "2rem", width: "300px" }}>
+        <Card>
+          <CardContent>
+            <Typography gutterBottom variant="h5">
+              13 May 17:30
+            </Typography>
+            <Typography gutterBottom>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam
+              provident fuga corporis nostrum sint expedita illum veritatis aut
+              quasi eveniet! Recusandae incidunt totam error amet vero ullam est
+              ducimus dolores!
+            </Typography>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                justifyContent: "center",
+              }}
+            >
+              <ConfirmAlert />
+              <CancelAlert />
+            </Stack>
+          </CardContent>
+        </Card>
+      </Stack>
+
       <Stack sx={{ padding: "2rem", width: "300px" }}>
         <Card>
           <CardContent>
