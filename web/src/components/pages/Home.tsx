@@ -1,11 +1,10 @@
-import { Box, Stack, Typography } from "@mui/material";
-import { DateTimePicker } from "@mui/x-date-pickers";
-import React, { useEffect } from "react";
-import BasicDateTimePicker from "../ChooseTime";
+import { Stack, Typography } from "@mui/material";
+import { useEffect } from "react";
 
 export default function Home() {
   const getCurrentUser = async () => {
-    await fetch("http://localhost:5000/get-current-user", {
+    await fetch("http://localhost:8000/get-current-user", {
+      credentials: "include",
       method: "GET",
       headers: {
         "Content-Type": "application/json",
