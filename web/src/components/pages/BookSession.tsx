@@ -101,7 +101,11 @@ export default function BookSession() {
         boxSizing: "border-box",
       }}
     >
-      <AddEvent open={createWindowOpen} setOpen={setCreateWindowOpen} />
+      <AddEvent
+        selectedDate={currentlySelectedDay}
+        open={createWindowOpen}
+        setOpen={setCreateWindowOpen}
+      />
       <Scheduler
         locale="en"
         events={events}

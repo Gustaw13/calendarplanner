@@ -7,7 +7,7 @@ import {
   ButtonGroup,
   AppBar,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MyTrainings from "./components/pages/MyTrainings";
 import NavBar from "./components/NavBar";
@@ -19,6 +19,23 @@ import SignUp from "./components/pages/SignUp";
 import AddEvent from "./components/AddEvent";
 
 function App() {
+  const getCurrentUser = async () => {
+    await fetch("http://localhost:8000/get-current-user", {
+      credentials: "include",
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      response.json().then((data) => {
+        console.log(data);
+      });
+    });
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
   return (
     <BrowserRouter>
       <Stack className="App">

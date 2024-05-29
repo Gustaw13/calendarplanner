@@ -66,6 +66,7 @@ def get_current_user():
 @cross_origin(supports_credentials=True)
 def add_event():
     request_body = json.loads(request.data)
+    print(request_body.get("eventDate"))
 
     event = Event(
         trainee=request_body.get("trainee"),

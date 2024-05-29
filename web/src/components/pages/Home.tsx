@@ -2,24 +2,6 @@ import { Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 
 export default function Home() {
-  const getCurrentUser = async () => {
-    await fetch("http://localhost:8000/get-current-user", {
-      credentials: "include",
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((response) => {
-      response.json().then((data) => {
-        console.log(data);
-      });
-    });
-  };
-
-  useEffect(() => {
-    getCurrentUser();
-  }, []);
-
   return (
     <Stack
       direction={"column"}

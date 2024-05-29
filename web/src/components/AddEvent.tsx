@@ -10,7 +10,7 @@ import { Box, Stack, TextField } from "@mui/material";
 import ChooseTime from "./ChooseTime";
 import SelectTrainee from "./SelectTrainee";
 
-export default function AddEvent({ open, setOpen }) {
+export default function AddEvent({ open, setOpen, selectedDate }) {
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -19,8 +19,9 @@ export default function AddEvent({ open, setOpen }) {
     setOpen(false);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
+    console.log(event);
     const data = new FormData(event.currentTarget);
     console.log({
       trainee: data.get("trainee"),
@@ -49,38 +50,34 @@ export default function AddEvent({ open, setOpen }) {
 
   return (
     <React.Fragment>
-      <Box component="form" noValidate onSubmit={handleSubmit}>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          /* aria-describedby="alert-dialog-description" */
-        >
-          <DialogTitle id="alert-dialog-title">{"Create event"}</DialogTitle>
-          {
-            <DialogContent>
-              {/* <DialogContentText id="alert-dialog-description">
-              Your training will be confirmed.
-            </DialogContentText> */}
-              <Stack sx={{ gap: "1.5rem" }}>
-                <SelectTrainee />
-                <TextField
-                  id="comment"
-                  name="comment"
-                  label="Add comment"
-                  variant="outlined"
-                />
-                <ChooseTime />
-              </Stack>
-            </DialogContent>
-          }
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        /* aria-describedby="alert-dialog-description" */
+      >
+        <DialogTitle id="alert-dialog-title">{"Create event"}</DialogTitle>
+        <Box component="form" noValidate onSubmit={handleSubmit}>
+          <DialogContent>
+            <Stack sx={{ gap: "1.5rem" }}>
+              <SelectTrainee />
+              <TextField
+                id="comment"
+                name="comment"
+                label="Add comment"
+                variant="outlined"
+              />
+              <ChooseTime />
+            </Stack>
+          </DialogContent>
+
           <DialogActions>
             <Button type="submit" color="success">
               Save
             </Button>
           </DialogActions>
-        </Dialog>
-      </Box>
+        </Box>
+      </Dialog>
     </React.Fragment>
   );
 }

@@ -21,8 +21,8 @@ class Event(db.Model):
     comment = db.Column(db.String(100))
     event_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    trainee_id = db.Column(db.Integer, db.ForeignKey("trainee.id"), nullable=False)
+    trainer_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    trainee_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def __repr__(self):
         return f"Event('{self.title}', '{self.event_date}')"
@@ -30,4 +30,5 @@ class Event(db.Model):
 
 if __name__ == "__main__":
     with app.app_context():
+        db.drop_all()
         db.create_all()
