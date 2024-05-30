@@ -36,6 +36,7 @@ function App() {
         value={{
           user,
           setUser,
+          getCurrentUser,
         }}
       >
         <Stack className="App">

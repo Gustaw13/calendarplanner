@@ -6,11 +6,13 @@ import {
   createTheme,
   Tooltip,
 } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "./context/UserContext";
 
 export default function NavBar() {
   const navigate = useNavigate();
+  const { user, getCurrentUser } = useContext(UserContext);
 
   return (
     <Stack
@@ -60,29 +62,52 @@ export default function NavBar() {
           Book Training
         </Typography>
       </Stack>
-
-      <Stack direction="row" spacing={1}>
+      {user ? (
         <Button
           color="inherit"
           variant="text"
           size="small"
-          onClick={() => {
-            navigate("/login");
+          onClick={async () => {
+            await fetch("http://localhost:8000/logout", {
+              credentials: "include",
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }).then((response) => {
+              response.json().then((data) => {
+                console.log(data);
+              });
+            });
+            getCurrentUser();
           }}
         >
-          Login
+          Logout
         </Button>
-        <Button
-          color="inherit"
-          variant="text"
-          size="small"
-          onClick={() => {
-            navigate("/signup");
-          }}
-        >
-          Sign up
-        </Button>
-      </Stack>
+      ) : (
+        <Stack direction="row" spacing={1}>
+          <Button
+            color="inherit"
+            variant="text"
+            size="small"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Login
+          </Button>
+          <Button
+            color="inherit"
+            variant="text"
+            size="small"
+            onClick={() => {
+              navigate("/signup");
+            }}
+          >
+            Sign up
+          </Button>
+        </Stack>
+      )}
     </Stack>
   );
 }

@@ -26,6 +26,7 @@ export default function AddEvent({ open, setOpen, selectedDate }) {
     console.log({
       trainee: data.get("trainee"),
       comment: data.get("comment"),
+      eventDate: data.get("eventDate"),
     });
 
     await fetch("http://localhost:8000/add-event", {

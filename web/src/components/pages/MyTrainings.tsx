@@ -3,19 +3,7 @@ import React, { useEffect } from "react";
 import CardPlan from "../CardPlan";
 
 export default function MyTrainings() {
-  const logout = async () => {
-    await fetch("http://localhost:8000/logout", {
-      credentials: "include",
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((response) => {
-      response.json().then((data) => {
-        console.log(data);
-      });
-    });
-  };
+  const logout = async () => {};
 
   useEffect(() => {
     logout();
