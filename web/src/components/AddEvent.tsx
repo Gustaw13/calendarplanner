@@ -21,13 +21,11 @@ export default function AddEvent({ open, setOpen, selectedDate }) {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    console.log(event);
+
+    console.log(typeof selectedDate.date);
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      trainee: data.get("trainee"),
-      comment: data.get("comment"),
-      eventDate: data.get("eventDate"),
-    });
+    console.log(typeof data.get("eventDate"));
 
     await fetch("http://localhost:8000/add-event", {
       credentials: "include",

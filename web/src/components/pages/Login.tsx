@@ -12,6 +12,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import { UserContext } from "../context/UserContext";
 
 function Copyright(props: any) {
   return (
@@ -35,6 +36,7 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function LogIn() {
+  const { getCurrentUser } = React.useContext(UserContext);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -57,6 +59,7 @@ export default function LogIn() {
     }).then(async (response) => {
       await response.json().then((data) => {
         console.log(data);
+        getCurrentUser();
       });
     });
   };

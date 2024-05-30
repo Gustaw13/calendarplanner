@@ -62,7 +62,7 @@ export default function NavBar() {
           Book Training
         </Typography>
       </Stack>
-      {user ? (
+      {user && user.email ? (
         <Button
           color="inherit"
           variant="text"

@@ -3,12 +3,6 @@ import React, { useEffect } from "react";
 import CardPlan from "../CardPlan";
 
 export default function MyTrainings() {
-  const logout = async () => {};
-
-  useEffect(() => {
-    logout();
-  }, []);
-
   return (
     <Box
       sx={{

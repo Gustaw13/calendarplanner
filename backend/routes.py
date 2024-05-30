@@ -59,7 +59,9 @@ def logout():
 @app.route("/get-current-user", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def get_current_user():
-    return json.dumps({"username": current_user.email})
+    return json.dumps(
+        {"email": current_user.email if current_user.is_authenticated else ""}
+    )
 
 
 @app.route("/add-event", methods=["POST"])

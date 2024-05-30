@@ -20,9 +20,10 @@ export default function ChooseTime() {
       >
         <DemoItem>
           <TimePicker
+            ampm={false}
             name="eventDate"
             label="Choose time"
-            defaultValue={dayjs("2024-04-17T00:00")}
+            defaultValue={dayjs(new Date())}
           />
         </DemoItem>
       </DemoContainer>

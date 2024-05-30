@@ -9,6 +9,7 @@ import MyTrainings from "./components/pages/MyTrainings";
 import { UserContext } from "./components/context/UserContext";
 import LogIn from "./components/pages/Login";
 import SignUp from "./components/pages/SignUp";
+import { error } from "console";
 
 function App() {
   const [user, setUser] = useState();
@@ -19,12 +20,16 @@ function App() {
       headers: {
         "Content-Type": "application/json",
       },
-    }).then((response) => {
-      response.json().then((data) => {
-        console.log(data);
-        setUser(data);
+    })
+      .then((response) => {
+        response.json().then((data) => {
+          console.log(data);
+          setUser(data);
+        });
+      })
+      .catch((e) => {
+        console.error(e);
       });
-    });
   };
 
   useEffect(() => {
