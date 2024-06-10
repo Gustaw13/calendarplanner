@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function SuccessConfirm() {
+export default function SuccessConfirm({ trainingDateText, closeParent }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -31,11 +31,18 @@ export default function SuccessConfirm() {
         <DialogTitle id="alert-dialog-title">{"Success!"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Be ready for your training on May 13, 17:30!
+            Be ready for your training on {trainingDateText}!
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Return</Button>
+          <Button
+            onClick={() => {
+              closeParent();
+              handleClose();
+            }}
+          >
+            Return
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

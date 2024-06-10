@@ -1,8 +1,10 @@
+from datetime import datetime
 import json
 from flask import app, request, session
 import flask
 from flask_cors import cross_origin
 from flask_login import current_user, login_required, login_user, logout_user
+from utils import Serializer
 from models import User, Event
 from app import login_manager, db, app, bcrypt
 
@@ -69,13 +71,42 @@ def get_current_user():
 def add_event():
     request_body = json.loads(request.data)
     print(request_body.get("eventDate"))
-
+    date = datetime.strptime(request_body.get("eventDate"), "%Y-%m-%d %H:%M:%S")
     event = Event(
-        trainee=request_body.get("trainee"),
         comment=request_body.get("comment"),
-        event_date=request_body.get("eventDate"),
-        # trainee_id=request_body.get("traineeId"),
+        event_date=date,
+        created_date=datetime.now(),
+        trainer_id=current_user.id,
+        student_id=request_body.get("studentId"),
     )
     db.session.add(event)
     db.session.commit()
     return json.dumps({"response": "success"})
+
+
+@app.route("/get-all-students", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def get_all_students():
+    students = Serializer.serialize_list(
+        User.query.filter_by(user_type="Student").all()
+    )
+
+    return json.dumps({"students": students})
+
+
+@app.route("/get-my-events", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def get_my_events():
+    my_events = Serializer.serialize_list(
+        Event.query.filter_by(student_id=current_user.id).all()
+    )
+
+    return json.dumps({"events": my_events}, default=str)
+
+
+@app.route("/get-all-events", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def get_all_events():
+    all_events = Serializer.serialize_list(Event.query.all())
+
+    return json.dumps({"events": all_events}, default=str)

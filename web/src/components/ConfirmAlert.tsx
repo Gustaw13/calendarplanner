@@ -7,7 +7,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import SuccessConfirm from "./SuccessConfirm";
 
-export default function ConfirmAlert() {
+export default function ConfirmAlert({ trainingDateText }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -46,15 +46,11 @@ export default function ConfirmAlert() {
           <Button color="error" onClick={handleClose}>
             Return
           </Button>
-          {/* <Button
-            variant="outlined"
-            color="success"
-            onClick={handleClose}
-            autoFocus
-          >
-            Confirm
-          </Button> */}
-          <SuccessConfirm />
+
+          <SuccessConfirm
+            closeParent={handleClose}
+            trainingDateText={trainingDateText}
+          />
         </DialogActions>
       </Dialog>
     </React.Fragment>

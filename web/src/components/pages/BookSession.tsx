@@ -1,8 +1,11 @@
 import { Box, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import Scheduler from "react-mui-scheduler";
 import AddEvent from "../AddEvent";
+import { User } from "../../types";
+import { getDateFromDateString, getTimeFromDateString } from "../../utils";
+import ClickedEvent from "../ClickedEvent";
 
 export default function BookSession() {
   const [state] = useState({
@@ -19,69 +22,106 @@ export default function BookSession() {
       open: true,
       color: "info", // info | success | warning | error
       severity: "info", // info | success | warning | error
-      message: "Work in progress, calendar doesn't work yet:(",
-      showActionButton: true,
+      message: "Click on a date, to add an event.",
+      // showActionButton: true,
       showNotification: true,
       delay: 1500,
     },
     toolbarProps: {
       showSearchBar: true,
-      /* showSwitchModeButtons: true, */
+      // showSwitchModeButtons: true,
       showDatePicker: true,
     },
   });
+  const [students, setStudents] = useState<User[]>([]);
+  const getAllStudents = async (): Promise<User[] | void> => {
+    return await fetch("http://localhost:8000/get-all-students", {
+      credentials: "include",
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json().then((data) => {
+          console.log(data);
+          setStudents(data.students);
+          return data.students;
+        });
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
 
-  const events = [
-    {
-      id: "event-1",
-      label: "Trening Bruno",
-      groupLabel: "Bruno",
-      user: "Bruno",
-      color: "#f28f6a",
-      startHour: "11:00",
-      endHour: "12:00",
-      date: "2024-05-10",
-      createdAt: new Date(),
-      createdBy: "Gustaw Kałek",
-    },
-    {
-      id: "event-2",
-      label: "Trening Borys",
-      groupLabel: "Borys",
-      user: "Borys",
-      color: "#099ce5",
-      startHour: "17:00",
-      endHour: "18:00",
-      date: "2024-05-09",
-      createdAt: new Date(),
-      createdBy: "Gustaw Kałek",
-    },
-    {
-      id: "event-3",
-      label: "Trening Michelle",
-      groupLabel: "Michelle",
-      user: "Michelle",
-      color: "#263686",
-      startHour: "10:00",
-      endHour: "11:00",
-      date: "2024-05-05",
-      createdAt: new Date(),
-      createdBy: "Gustaw Kałek",
-    },
-  ];
+  const [events, setEvents] = useState<Event[]>([]);
+  const getMyEvents = async (s: User[]) => {
+    await fetch("http://localhost:8000/get-all-events", {
+      credentials: "include",
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        response.json().then((data) => {
+          setEvents(
+            data.events.map((event) => {
+              const user = s.find((st) => st.id === event.student_id);
+
+              return {
+                id: event.id,
+                label: "Trening " + user?.first_name,
+                groupLabel: user?.first_name,
+                user: user?.first_name,
+                color: "#72ad74",
+                comment: event.comment,
+                startHour: getTimeFromDateString(event.event_date),
+                date: getDateFromDateString(event.event_date),
+                createdAt: event.created_date,
+                createdBy: event.trainer_id,
+              };
+            })
+          );
+        });
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
+  const calendarLoadData = async () => {
+    const s = await getAllStudents();
+
+    if (s) {
+      getMyEvents(s);
+    }
+  };
+  useEffect(() => {
+    calendarLoadData();
+  }, []);
+
+  useEffect(() => {
+    console.log("test", events);
+  }, [events]);
+
   const [createWindowOpen, setCreateWindowOpen] = useState(false);
   const [currentlySelectedDay, setCurrentlySelectedDay] = useState();
 
+  const [eventWindowOpen, setEventWindowOpen] = useState(false);
+  const [currentlyClickedEvent, setCurrentlyClickedEvent] = useState();
+
   const handleCellClick = (event, row, day) => {
     // Otwieranie okienka z wyborem godziny + nazwa wydarzenia
-    console.log(day);
     setCurrentlySelectedDay(day);
     setCreateWindowOpen(true);
   };
 
   const handleEventClick = (event, item) => {
     // Do something...
-    console.log("testttt");
+    setCurrentlyClickedEvent(item);
+    setEventWindowOpen(true);
+    console.log("eventTest", item);
   };
 
   const handleEventsChange = (item) => {
@@ -102,22 +142,34 @@ export default function BookSession() {
       }}
     >
       <AddEvent
+        calendarLoadData={calendarLoadData}
+        students={students}
         selectedDate={currentlySelectedDay}
         open={createWindowOpen}
         setOpen={setCreateWindowOpen}
       />
-      <Scheduler
-        locale="en"
-        events={events}
-        legacyStyle={false}
-        options={state?.options}
-        alertProps={state?.alertProps}
-        toolbarProps={state?.toolbarProps}
-        onEventsChange={handleEventsChange}
-        onCellClick={handleCellClick}
-        onTaskClick={handleEventClick}
-        onAlertCloseButtonClicked={handleAlertCloseButtonClicked}
-      />
+      {currentlyClickedEvent && (
+        <ClickedEvent
+          currentlyClickedEvent={currentlyClickedEvent}
+          open={eventWindowOpen}
+          setOpen={setEventWindowOpen}
+        />
+      )}
+
+      {events.length > 0 && (
+        <Scheduler
+          locale="en"
+          events={events}
+          legacyStyle={false}
+          options={state?.options}
+          alertProps={state?.alertProps}
+          toolbarProps={state?.toolbarProps}
+          onEventsChange={handleEventsChange}
+          onCellClick={handleCellClick}
+          onTaskClick={handleEventClick}
+          onAlertCloseButtonClicked={handleAlertCloseButtonClicked}
+        />
+      )}
     </Stack>
   );
 }

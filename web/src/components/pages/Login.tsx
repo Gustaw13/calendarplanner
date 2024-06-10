@@ -23,7 +23,7 @@ function Copyright(props: any) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+      <Link color="inherit" href="/">
         Training Planner
       </Link>{" "}
       {new Date().getFullYear()}
@@ -35,7 +35,7 @@ function Copyright(props: any) {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function LogIn() {
+export default function LogIn(data) {
   const { getCurrentUser } = React.useContext(UserContext);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -58,7 +58,7 @@ export default function LogIn() {
       }),
     }).then(async (response) => {
       await response.json().then((data) => {
-        console.log(data);
+        console.log("data", data);
         getCurrentUser();
       });
     });
@@ -112,7 +112,19 @@ export default function LogIn() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+            {data.response === "success" && (
+              <Button
+                href="/"
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+            )}
             <Button
+              // href="/"
               type="submit"
               fullWidth
               variant="contained"
@@ -127,7 +139,7 @@ export default function LogIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/signup " variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

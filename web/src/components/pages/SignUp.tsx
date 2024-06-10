@@ -133,6 +133,7 @@ export default function SignUp() {
             </Grid>
           </Grid>
           <Button
+            href="/login"
             type="submit"
             fullWidth
             variant="contained"

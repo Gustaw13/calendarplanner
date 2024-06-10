@@ -4,8 +4,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useEffect, useState } from "react";
+import { User } from "../types";
 
-export default function SelectTrainee() {
+export default function SelectStudent({ students }) {
   const [age, setAge] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -16,19 +18,28 @@ export default function SelectTrainee() {
     <Box sx={{ minWidth: 120, paddingTop: "5px" }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">
-          Select your trainee
+          Select your student
         </InputLabel>
         <Select
           labelId="demo-simple-select-label"
           required
           sx={{}}
-          label="Select your trainee"
-          name="trainee"
-          id="trainee"
+          label="Select your student"
+          name="studentId"
+          id="studentId"
           value={age}
           onChange={handleChange}
         >
-          <MenuItem id="Michelle" value="Michelle">
+          {students.map((student) => (
+            <MenuItem
+              key={student.id}
+              id={student.id.toString()}
+              value={student.id}
+            >
+              {student.first_name} {student.last_name}
+            </MenuItem>
+          ))}
+          {/* <MenuItem id="Michelle" value="Michelle">
             Michelle
           </MenuItem>
           <MenuItem id="Borys" value="Borys">
@@ -36,7 +47,7 @@ export default function SelectTrainee() {
           </MenuItem>
           <MenuItem id="Bruno" value="Bruno">
             Bruno
-          </MenuItem>
+          </MenuItem> */}
         </Select>
       </FormControl>
     </Box>

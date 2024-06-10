@@ -8,9 +8,16 @@ import DialogTitle from "@mui/material/DialogTitle";
 import SuccessConfirm from "./SuccessConfirm";
 import { Box, Stack, TextField } from "@mui/material";
 import ChooseTime from "./ChooseTime";
-import SelectTrainee from "./SelectTrainee";
+import SelectStudent from "./SelectStudent";
+import { useReducer } from "react";
 
-export default function AddEvent({ open, setOpen, selectedDate }) {
+export default function AddEvent({
+  open,
+  setOpen,
+  selectedDate,
+  students,
+  calendarLoadData,
+}) {
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -22,29 +29,35 @@ export default function AddEvent({ open, setOpen, selectedDate }) {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
-    console.log(typeof selectedDate.date);
-
     const data = new FormData(event.currentTarget);
-    console.log(typeof data.get("eventDate"));
 
-    await fetch("http://localhost:8000/add-event", {
-      credentials: "include",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const eventDate = data.get("eventDate");
+    const date = selectedDate.date;
+    if (eventDate && date) {
+      const [hours, minutes] = eventDate.toString().split(":").map(Number);
+      date.setHours(hours, minutes);
+      console.log(date);
+      await fetch("http://localhost:8000/add-event", {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-      body: JSON.stringify({
-        trainee: data.get("trainee"),
-        traineeId: data.get("traineeId"),
-        comment: data.get("comment"),
-        eventDate: data.get("eventDate"),
-      }),
-    }).then(async (response) => {
-      await response.json().then((data) => {
-        console.log(data);
+        body: JSON.stringify({
+          studentId: data.get("studentId"),
+          comment: data.get("comment"),
+          eventDate: date.toLocaleString("sv-SE"),
+        }),
+      }).then(async (response) => {
+        await response.json().then(async (data) => {
+          console.log(data);
+          await calendarLoadData();
+          setOpen(false);
+          window.location.reload();
+        });
       });
-    });
+    }
   };
 
   return (
@@ -59,7 +72,7 @@ export default function AddEvent({ open, setOpen, selectedDate }) {
         <Box component="form" noValidate onSubmit={handleSubmit}>
           <DialogContent>
             <Stack sx={{ gap: "1.5rem" }}>
-              <SelectTrainee />
+              <SelectStudent students={students} />
               <TextField
                 id="comment"
                 name="comment"

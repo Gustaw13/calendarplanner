@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask_login import UserMixin
 from app import db, app
+from utils import Serializer
 
 
 class User(UserMixin, db.Model):
@@ -11,18 +12,26 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(60), nullable=False)
     user_type = db.Column(db.String(30), nullable=False)
 
+    def serialize(self):
+        d = Serializer.serialize(self)
+        del d["password"]
+        return d
+
     def __repr__(self):
         return f"User('{self.first_name}', '{self.last_name}', '{self.email}',)"
 
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    trainee = db.Column(db.String(50), nullable=False)
     comment = db.Column(db.String(100))
     event_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     trainer_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    trainee_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
 
     def __repr__(self):
         return f"Event('{self.title}', '{self.event_date}')"
