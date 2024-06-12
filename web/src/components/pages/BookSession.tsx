@@ -71,7 +71,7 @@ export default function BookSession() {
 
               return {
                 id: event.id,
-                label: "Trening " + user?.first_name,
+                label: "Training " + user?.first_name,
                 groupLabel: user?.first_name,
                 user: user?.first_name,
                 color: "#72ad74",
